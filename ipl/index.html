@@ -4,54 +4,89 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LevelUp Cricket Broadcast</title>
 <style>
-* { box-sizing:border-box }
-html,body { margin:0; width:100%; height:100%; overflow:hidden; background:transparent; color:#fff }
-body { font: 700 clamp(10px,1.12vw,23px) "Barlow Condensed","Arial Narrow",Arial,sans-serif; font-variant-numeric:tabular-nums }
-[hidden] { display:none!important }
-main { position:absolute; inset:auto 3.5% 4%; filter:drop-shadow(0 6px 14px #06072195) }
-header { display:flex; align-items:center; width:max-content; max-width:100%; background:#15133b; letter-spacing:.11em; border-left:3px solid #ffda78; text-transform:uppercase }
-header > * { padding:.55em 1em }
-.brand { color:#ffe199; font-style:italic; font-weight:900 }
-#tag { color:#c9d3ff; font-size:.8em; white-space:nowrap }
-.bar { display:grid; grid-template-columns: 1.2fr .8fr 1.2fr 1fr; background:linear-gradient(110deg,#08286b,#17123e 57%,#33145c); border-top:2px solid #8e91ff; border-bottom:3px solid #f5cc69; border-radius:0 14px 14px 14px; overflow:hidden }
-.cell { display:flex; flex-direction:column; justify-content:center; gap:.32em; padding:.65em .9em; min-width:0; border-right:1px solid #ffffff26 }
-.label { text-transform:uppercase; color:#c1cdff; font-size:.76em; letter-spacing:.09em }
-.name { text-overflow:ellipsis; white-space:nowrap; overflow:hidden }
-#teams { font-size:1.2em; text-transform:uppercase }
-.score { color:#141331; background:linear-gradient(115deg,#ffeda7,#eab34d); border-right:0 }
-.score .label { color:#36254a }
-#score { font-size:2.45em; font-weight:900; line-height:.92; letter-spacing:-.055em }
-.line { display:flex; align-items:baseline; justify-content:space-between; gap:.45em }
-.line .value { color:#ffe6a0; white-space:nowrap }
-#balls { display:flex; flex-wrap:wrap; gap:.22em }
-.ball { display:grid; place-items:center; min-width:1.45em; height:1.45em; border-radius:50%; background:#4c3b83; font-size:.83em }
-.boundary { color:#241340; background:#ffdc81 }
-.wicket { background:#a52154 }
-#event { width:max-content; max-width:100%; margin:0 auto .55em; text-transform:uppercase; padding:.3em 1.5em; background:linear-gradient(100deg,#1527ac,#5b2281); color:#ffe29c; border:2px solid #ffda78; font-size:1.8em; font-weight:900; text-align:center; border-radius:.25em }
-#event.flash { animation:burst .35s ease-out }
-@keyframes burst { from { transform:translateY(.6em) scale(.87); opacity:0 } }
-@media(prefers-reduced-motion:reduce) { #event.flash { animation:none } }
-@media(max-width:640px) { .bar { grid-template-columns:1.2fr .8fr } .cell:nth-child(n+3) { padding-block:.38em } }
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent;color:white}
+body{font:800 clamp(10px,1.34vw,27px) "Arial Narrow","Liberation Sans Narrow",Arial,sans-serif;font-variant-numeric:tabular-nums}
+[hidden]{display:none!important}
+:root{--orange:#ff962f;--ink:#061438;--cyan:#4cdfff;--green:#90dd45}
+.masthead{position:absolute;inset:2.5% 3.3% auto;display:grid;grid-template-columns:1fr 3.4fr 1fr;align-items:start;gap:2vw;text-align:center;text-transform:uppercase}
+.ribbon{grid-column:2;position:relative;isolation:isolate;padding:.58em 1.4em;font-size:1.13em;font-style:italic;letter-spacing:.025em;line-height:1.08;filter:drop-shadow(0 0 .38em #1687fa80)}
+.ribbon::before,.ribbon::after{content:"";position:absolute;inset:0;z-index:-1;transform:skewX(-25deg)}
+.ribbon::before{background:linear-gradient(115deg,#ffd69f,#bc4c0b 9%,#ffb866 12%,#103b83 15%,#0a235f 80%,#ff790b 89%,#ffd69f);border-block:2px solid var(--orange)}
+.ribbon::after{inset:4px 7%;background:linear-gradient(180deg,#104393,#071a4e 58%,#0b1741);border-block:1px solid #53b4f9}
+#tag{position:absolute;left:50%;bottom:4.3%;transform:translateX(-50%);padding:.4em .7em;font-size:.72em;line-height:1.2;border:1px solid var(--orange);border-radius:.35em;background:#091d40;color:#fff1db;text-shadow:0 1px #000;white-space:nowrap}
+body:has(main:not([hidden])) #tag{bottom:calc(4.3% + 9em)}
+main{position:absolute;inset:auto 2.2% 4.3%}
+.wings{position:absolute;z-index:-1;inset:-2em -2.25% -4.5vh;overflow:hidden;pointer-events:none}
+.wings::before,.wings::after{content:"";position:absolute;width:30%;height:100%;background:linear-gradient(148deg,#0f9fffbb 0%,#102e77bb 30%,#123c1ecc 65%,#469d1acc 80%,#0b1c27);clip-path:polygon(0 0,100% 100%,0 100%)}
+.wings::after{right:0;transform:scaleX(-1);background:linear-gradient(148deg,#75db28cc,#2a771abb 38%,#124923cc 72%,#6fbb2bcc)}
+.matchup{min-height:3.7em;display:grid;grid-template-columns:minmax(0,1.28fr) .86fr .67fr .38fr minmax(0,1.37fr);align-items:stretch;position:relative;isolation:isolate;margin:0 1.65em .78em;border-block:2px solid #68dcff;border-radius:.78em;box-shadow:0 0 .65em #189bff91,0 .27em .55em #090b2c; background:linear-gradient(180deg,#144fb4,#08266e 44%,#07163f)}
+.team{display:flex;align-items:center;justify-content:center;min-width:0;font-size:1.58em;font-style:italic;text-transform:uppercase;padding:0 .4em;letter-spacing:-.025em}
+.team.home{padding-left:1.65em}
+.team.away{padding-right:1.65em;border-radius:0 .45em .45em 0;background:linear-gradient(#53a725,#23690e 55%,#10360e);box-shadow:inset 0 2px 0 var(--green)}
+.name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.crest{position:absolute;top:50%;transform:translateY(-50%);width:3.55em;aspect-ratio:1;background:var(--orange);clip-path:polygon(50% 0,100% 14%,94% 64%,77% 86%,50% 100%,23% 86%,6% 64%,0 14%);display:grid;place-items:center;font:900 1.02em Arial,sans-serif;isolation:isolate;text-shadow:0 .13em .24em #000}
+.crest::before{content:"";position:absolute;inset:3px;background:linear-gradient(145deg,#1354a4,#061938 70%);clip-path:inherit;z-index:-1}
+.crest::after{content:"✦";position:absolute;bottom:.5em;font-size:.48em;color:var(--orange)}
+#homeCrest{left:-.93em}#awayCrest{right:-.93em}#awayCrest::before{background:linear-gradient(145deg,#38861b,#0e310f 72%)}
+.scorebox{position:relative;isolation:isolate;display:grid;place-items:center;min-width:0;color:#06143b}
+.scorebox::before{content:"";position:absolute;inset:-.18em 1%;background:linear-gradient(#ffcf91,#ffac4c 50%,#f68a20 51%,#e77915);transform:skewX(-20deg);border:2px solid #ffdbb1;border-radius:.55em;z-index:-1;box-shadow:0 0 .45em #ffab5b99}
+#score{font-size:2.74em;font-style:italic;font-weight:950;letter-spacing:-.06em;line-height:1}
+.overs,.versus{display:grid;place-items:center;font-style:italic;white-space:nowrap}
+.overs{font-size:1.16em}
+.versus{transform:skewX(-16deg);background:linear-gradient(#4b4762,#202037);border-inline:2px solid #ef9a4b;font-size:1.16em}
+.versus span{transform:skewX(16deg)}
+.details{display:grid;grid-template-columns:1.17fr .44fr 1.11fr 1.26fr;align-items:stretch;min-height:4em;background:linear-gradient(#102f7b,#091b53 73%,#07153d);border:2px solid #ff9d45;border-radius:.77em;box-shadow:inset 0 2px 0 #96e7ff,0 0 .5em #ff842680}
+.cell{min-width:0;display:flex;justify-content:center;flex-direction:column;gap:.19em;padding:.43em .68em;border-right:1px solid #ff9d4599}
+.cell:last-child{border-right:0}
+.line{display:flex;justify-content:space-between;gap:.35em;text-transform:uppercase;font-style:italic}
+.value{color:#ffc27d;white-space:nowrap}
+.label{color:#d0e0ff;text-transform:uppercase;font-size:.68em;letter-spacing:.05em}
+.rate{align-items:center;line-height:1.02}
+#pace{font-size:1.48em;color:#ffc27d;font-style:italic}
+#balls{display:flex;flex-wrap:wrap;gap:.19em}
+.ball{display:grid;place-items:center;min-width:1.34em;padding:0 .16em;height:1.32em;border-radius:.25em;background:linear-gradient(#2970bc,#153776);border:1px solid #86ccff;font-size:.88em;font-style:italic}
+.ball.six{background:linear-gradient(#13a3ff,#0752bb)}.ball.four{background:linear-gradient(#39db46,#137c25);border-color:#acf6ad}.ball.wicket{background:linear-gradient(#db5271,#9b1741);border-color:#ffc0c9}
+#event{width:max-content;max-width:92%;margin:0 auto .55em;text-transform:uppercase;padding:.3em 1.5em;background:linear-gradient(100deg,#1527ac,#205b17);color:#fff1db;border:2px solid var(--orange);font-size:1.65em;font-weight:900;font-style:italic;text-align:center;border-radius:.25em}
+#event.flash{animation:burst .35s ease-out}
+@keyframes burst{from{transform:translateY(.6em) scale(.87);opacity:0}}
+@media(prefers-reduced-motion:reduce){#event.flash{animation:none}}
 </style>
-<main>
+<header class="masthead" id="masthead">
+  <div id="competition" class="ribbon">LevelUp Premier Cricket League • Season 1</div>
+</header>
+<div id="tag" hidden></div>
+<main id="bar" hidden>
+  <div class="wings" aria-hidden="true"></div>
   <div id="event" hidden></div>
-  <header><span class="brand">LevelUp Sports</span><span id="competition" class="name"></span><span id="tag">Awaiting score feed</span></header>
-  <div class="bar" id="bar" hidden>
-    <div class="cell"><div id="teams" class="name"></div><div id="innings" class="label"></div><div class="label">This over</div><div id="balls"></div></div>
-    <div class="cell score"><div id="score"></div><div id="pace" class="label"></div></div>
-    <div class="cell"><div class="label">Batting</div><div id="batter1" class="line"></div><div id="batter2" class="line"></div></div>
-    <div class="cell"><div class="label">Bowling</div><div id="bowler" class="line"></div><div id="bowlerOvers" class="label"></div></div>
+  <div class="matchup">
+    <div class="team home"><span id="batting" class="name"></span></div>
+    <div class="scorebox"><div id="score"></div></div>
+    <div class="overs" id="overs"></div>
+    <div class="versus"><span>VS</span></div>
+    <div class="team away"><span id="fielding" class="name"></span></div>
+    <div class="crest" id="homeCrest" aria-hidden="true"></div>
+    <div class="crest" id="awayCrest" aria-hidden="true"></div>
+  </div>
+  <div class="details">
+    <div class="cell"><div id="batter1" class="line"></div><div id="batter2" class="line"></div></div>
+    <div class="cell rate"><span id="innings" class="label"></span><span class="label">CRR</span><span id="pace"></span></div>
+    <div class="cell"><div class="label">Bowling</div><div id="bowler" class="line"></div></div>
+    <div class="cell"><div class="label">This over</div><div id="balls"></div></div>
   </div>
 </main>
 <script>
 'use strict';
 
 const params = new URLSearchParams(location.search);
-const demo = params.get('mode') === 'demo';
+const demo = params.get('mode') === 'demo' || (!params.has('mode') && !params.has('feed') && !params.has('club') && !params.has('fixture'));
+const demoClub = params.get('club') || '1124300';
+const demoFixture = params.get('fixture') || '1018';
 const clubId = params.get('club');
 const fixtureId = params.get('fixture');
 const byId = id => document.getElementById(id);
 const set = (id, value) => { byId(id).textContent = value; };
+byId('masthead').hidden = params.get('header') === '0';
 const eventLabels = {four:'Four', six:'Six', wicket:'Wicket', fifty:'Fifty', century:'Century'};
 let previous;
 let eventTimeout;
@@ -90,29 +125,41 @@ function showEvent(snapshot) {
   }
 }
 
+function initials(name) {
+  const words = name.match(/[\p{L}\p{N}]+/gu) || [];
+  return (words.length === 1 ? words[0].slice(0, 3) : words.slice(0, 3).map(word => Array.from(word)[0]).join('')).toUpperCase() || '–';
+}
+
+function status(label, state = '') {
+  set('tag', label);
+  byId('tag').hidden = state !== 'delayed';
+}
+
 function render(snapshot) {
-  set('competition', snapshot.competition || '');
-  set('tag', demo ? 'Sample score' : snapshot.phase === 'live' ? 'Live' :
-    snapshot.phase === 'break' ? 'Innings break' : 'Final');
-  set('teams', snapshot.batting + ' vs ' + snapshot.fielding);
+  set('competition', snapshot.competition || 'LevelUp Premier Cricket League • Season 1');
+  status('');
+  set('batting', snapshot.batting);
+  set('fielding', snapshot.fielding);
+  set('homeCrest', initials(snapshot.batting));
+  set('awayCrest', initials(snapshot.fielding));
   set('innings', 'Innings ' + snapshot.innings);
   set('score', snapshot.runs + '/' + snapshot.wickets);
   const crr = snapshot.legalBalls ? (snapshot.runs * 6 / snapshot.legalBalls).toFixed(2) : '0.00';
-  set('pace', overs(snapshot.legalBalls) + ' OV  ·  CRR ' + crr);
+  set('overs', overs(snapshot.legalBalls) + ' OVERS');
+  set('pace', crr);
   byId('balls').replaceChildren(...(snapshot.deliveries || []).slice(-12).map(value => {
     const chip = document.createElement('span');
-    chip.className = 'ball' + (value === 'W' ? ' wicket' : ['4','6'].includes(value) ? ' boundary' : '');
+    chip.className = 'ball' + (value === 'W' ? ' wicket' : value === '4' ? ' four' : value === '6' ? ' six' : '');
     chip.textContent = value;
     return chip;
   }));
   for (let i = 0; i < 2; i++) {
     const player = snapshot.batters?.[i];
-    line('batter' + (i + 1), player ? player.name + (player.onStrike ? ' *' : '') : '—',
+    line('batter' + (i + 1), player ? (player.onStrike ? '▸ ' : '') + player.name : '—',
       player ? player.runs + ' (' + player.balls + ')' : '');
   }
   const bowler = snapshot.bowler;
-  line('bowler', bowler?.name || '—', bowler ? bowler.wickets + '/' + bowler.runs : '');
-  set('bowlerOvers', bowler ? overs(bowler.legalBalls) + ' overs' : '');
+  line('bowler', bowler?.name || '—', bowler ? bowler.wickets + '/' + bowler.runs + ' (' + overs(bowler.legalBalls) + ')' : '');
   byId('bar').hidden = false;
   showEvent(snapshot);
   previous = snapshot;
@@ -149,7 +196,7 @@ async function poll(feed) {
     failures = 0;
   } catch (error) {
     failures++;
-    set('tag', previous ? 'Feed delayed · last score' : 'Score feed unavailable');
+    status(previous ? 'Feed delayed · last score' : 'Score feed unavailable', 'delayed');
     byId('event').hidden = true;
     console.warn(error.message);
   } finally {
@@ -158,13 +205,13 @@ async function poll(feed) {
   setTimeout(() => poll(feed), Math.min(30000, 5000 * 2 ** failures));
 }
 
-if (demo && clubId === '1124300' && fixtureId === '1018') {
-  render({competition:'LPCL Indoor 2026 · Season 1', batting:'Rangers', fielding:'Ruthless XI',
+if (demo && demoClub === '1124300' && demoFixture === '1018') {
+  render({competition:'LevelUp Premier Cricket League • Season 1', batting:'Rangers', fielding:'Ruthless XI',
     phase:'live', innings:1, runs:67, wickets:0, legalBalls:17, deliveries:['6','6','4','6','6'],
-    batters:[{name:'Sathish Reddy',runs:47,balls:11},{name:'Praveen K',runs:20,balls:6}],
+    batters:[{name:'Sathish Reddy',runs:47,balls:11,onStrike:true},{name:'Praveen K',runs:20,balls:6}],
     bowler:{name:'Chetan Reddy',wickets:0,runs:50,legalBalls:11}});
 } else if (demo) {
-  set('tag', 'Sample available for fixture 1018');
+  status('Preview available for fixture 1018', 'delayed');
 } else if (params.has('feed') && /^\d+$/.test(clubId || '') && /^\d+$/.test(fixtureId || '')) {
   try {
     const feed = new URL(params.get('feed'), location.href);
@@ -175,8 +222,10 @@ if (demo && clubId === '1124300' && fixtureId === '1018') {
     feed.searchParams.set('fixtureId', fixtureId);
     poll(feed);
   } catch (error) {
-    set('tag', 'Invalid score feed URL');
+    status('Invalid score feed URL', 'delayed');
   }
+} else {
+  status('Awaiting score feed', 'delayed');
 }
 </script>
 </html>

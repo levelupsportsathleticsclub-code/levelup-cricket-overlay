@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LevelUp Sports | OBS Promo</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}
+[hidden]{display:none!important}
+body{font-family:"Segoe UI",Arial,sans-serif;color:white}
+.banner{position:absolute;left:2.5%;right:2.5%;bottom:5%;height:clamp(42px,6.1vw,116px);display:grid;grid-template-columns:28% 72%;align-items:center;isolation:isolate;filter:drop-shadow(0 .28vw .36vw #01142b90)}
+.banner::before{content:"";position:absolute;z-index:-2;inset:4% 0;background:linear-gradient(105deg,#064468,#0a6388 60%,#0b3e61);border:1px solid #67caff52;border-radius:.95vw}
+.banner::after{content:"";position:absolute;z-index:-1;inset:0 auto 0 0;width:30%;background:linear-gradient(110deg,#d73434,#b8232b);clip-path:polygon(0 0,94% 0,100% 100%,0 100%);border-radius:.35vw 1.2vw 0 .35vw}
+.tag,.message{display:flex;align-items:center;justify-content:center;min-width:0;line-height:1.16;letter-spacing:.004em;font-weight:650;text-align:center;text-shadow:0 1px 2px #08223794}
+.tag{padding:0 .55em;font-size:clamp(11px,2.25vw,43px)}
+.message{padding:0 1em 0 1.6em;font-size:clamp(12px,2.53vw,49px)}
+</style>
+</head>
+<body>
+<aside class="banner" id="banner" hidden>
+  <div class="tag" id="tag"></div>
+  <div class="message" id="message"></div>
+</aside>
+<script>
+'use strict';
+const promos = Object.freeze({
+  'volleyball-training': ['Train · Serve · Spike', 'Volleyball Training @ LevelUp — Join Us Today!'],
+  'badminton-training': ['Train · Move · Smash', 'Badminton Training @ LevelUp — Build Your Game!'],
+  'volleyball-clinics': ['Pass · Set · Hit', 'Volleyball Clinics @ LevelUp — Sharpen Your Skills!'],
+  'pickleball-happy-hours': ['Happy Hours', 'Pickleball @ LevelUp — It’s Happening!'],
+  'open-play-pickleball': ['Dink · Rally · Play', 'Open Play Pickleball @ LevelUp — Join the Game!'],
+  'open-play-volleyball': ['Big Hits · Big Rallies', 'Open Play Volleyball @ LevelUp — Join Us Today!'],
+  'open-play-badminton': ['Grab a Racket', 'Open Play Badminton @ LevelUp — Come Rally With Us!'],
+  'indoor-cricket-tournament': ['Big Hits · Big Wickets', 'Indoor Cricket Tournament @ LevelUp — Game On!'],
+  'box-cricket': ['Small Court · Big Hits', 'Box Cricket @ LevelUp — Bring Your Squad!'],
+  'indoor-futsal': ['Quick Feet · Big Goals', 'Indoor Futsal @ LevelUp — Bring Your Team!']
+});
+const key = new URLSearchParams(location.search).get('sport');
+if (Object.hasOwn(promos, key)) {
+  const [tag, message] = promos[key];
+  document.getElementById('tag').textContent = tag;
+  document.getElementById('message').textContent = message;
+  document.getElementById('banner').hidden = false;
+}
+</script>
+</body>
+</html>
