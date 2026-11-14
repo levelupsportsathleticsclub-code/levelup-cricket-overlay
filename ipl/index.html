@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LevelUp Cricket Broadcast</title>
+<style>
+* { box-sizing:border-box }
+html,body { margin:0; width:100%; height:100%; overflow:hidden; background:transparent; color:#fff }
+body { font: 700 clamp(10px,1.12vw,23px) "Barlow Condensed","Arial Narrow",Arial,sans-serif; font-variant-numeric:tabular-nums }
+[hidden] { display:none!important }
+main { position:absolute; inset:auto 3.5% 4%; filter:drop-shadow(0 6px 14px #06072195) }
+header { display:flex; align-items:center; width:max-content; max-width:100%; background:#15133b; letter-spacing:.11em; border-left:3px solid #ffda78; text-transform:uppercase }
+header > * { padding:.55em 1em }
+.brand { color:#ffe199; font-style:italic; font-weight:900 }
+#tag { color:#c9d3ff; font-size:.8em; white-space:nowrap }
+.bar { display:grid; grid-template-columns: 1.2fr .8fr 1.2fr 1fr; background:linear-gradient(110deg,#08286b,#17123e 57%,#33145c); border-top:2px solid #8e91ff; border-bottom:3px solid #f5cc69; border-radius:0 14px 14px 14px; overflow:hidden }
+.cell { display:flex; flex-direction:column; justify-content:center; gap:.32em; padding:.65em .9em; min-width:0; border-right:1px solid #ffffff26 }
+.label { text-transform:uppercase; color:#c1cdff; font-size:.76em; letter-spacing:.09em }
+.name { text-overflow:ellipsis; white-space:nowrap; overflow:hidden }
+#teams { font-size:1.2em; text-transform:uppercase }
+.score { color:#141331; background:linear-gradient(115deg,#ffeda7,#eab34d); border-right:0 }
+.score .label { color:#36254a }
+#score { font-size:2.45em; font-weight:900; line-height:.92; letter-spacing:-.055em }
+.line { display:flex; align-items:baseline; justify-content:space-between; gap:.45em }
+.line .value { color:#ffe6a0; white-space:nowrap }
+#balls { display:flex; flex-wrap:wrap; gap:.22em }
+.ball { display:grid; place-items:center; min-width:1.45em; height:1.45em; border-radius:50%; background:#4c3b83; font-size:.83em }
+.boundary { color:#241340; background:#ffdc81 }
+.wicket { background:#a52154 }
+#event { width:max-content; max-width:100%; margin:0 auto .55em; text-transform:uppercase; padding:.3em 1.5em; background:linear-gradient(100deg,#1527ac,#5b2281); color:#ffe29c; border:2px solid #ffda78; font-size:1.8em; font-weight:900; text-align:center; border-radius:.25em }
+#event.flash { animation:burst .35s ease-out }
+@keyframes burst { from { transform:translateY(.6em) scale(.87); opacity:0 } }
+@media(prefers-reduced-motion:reduce) { #event.flash { animation:none } }
+@media(max-width:640px) { .bar { grid-template-columns:1.2fr .8fr } .cell:nth-child(n+3) { padding-block:.38em } }
+</style>
+<main>
+  <div id="event" hidden></div>
+  <header><span class="brand">LevelUp Sports</span><span id="competition" class="name"></span><span id="tag">Awaiting score feed</span></header>
+  <div class="bar" id="bar" hidden>
+    <div class="cell"><div id="teams" class="name"></div><div id="innings" class="label"></div><div class="label">This over</div><div id="balls"></div></div>
+    <div class="cell score"><div id="score"></div><div id="pace" class="label"></div></div>
+    <div class="cell"><div class="label">Batting</div><div id="batter1" class="line"></div><div id="batter2" class="line"></div></div>
+    <div class="cell"><div class="label">Bowling</div><div id="bowler" class="line"></div><div id="bowlerOvers" class="label"></div></div>
+  </div>
+</main>
+<script>
+'use strict';
+
+const params = new URLSearchParams(location.search);
+const demo = params.get('mode') === 'demo';
+const clubId = params.get('club');
+const fixtureId = params.get('fixture');
+const byId = id => document.getElementById(id);
+const set = (id, value) => { byId(id).textContent = value; };
+const eventLabels = {four:'Four', six:'Six', wicket:'Wicket', fifty:'Fifty', century:'Century'};
+let previous;
+let eventTimeout;
+let failures = 0;
+
+function line(id, name, value) {
+  const label = Object.assign(document.createElement('span'), {className:'name', textContent:name});
+  const figures = Object.assign(document.createElement('span'), {className:'value', textContent:value});
+  byId(id).replaceChildren(label, figures);
+}
+
+function overs(balls) {
+  return Math.floor(balls / 6) + '.' + (balls % 6);
+}
+
+function labelEvent(event) {
+  return typeof event?.id === 'string' && event.id.length > 0 && Object.hasOwn(eventLabels, event.type);
+}
+
+function showEvent(snapshot) {
+  const banner = byId('event');
+  const persistent = snapshot.phase === 'break' ? 'Innings break' :
+    snapshot.phase === 'final' ? (snapshot.result || 'Match complete') : '';
+  if (persistent && !banner.hidden && banner.textContent === persistent) return;
+  if (!persistent && previous?.phase === 'live' && previous.event?.id === snapshot.event?.id) return;
+  clearTimeout(eventTimeout);
+  const label = persistent || (previous?.phase === 'live' && labelEvent(snapshot.event)
+    ? eventLabels[snapshot.event.type] : '');
+  banner.textContent = label;
+  banner.hidden = !label;
+  banner.classList.remove('flash');
+  if (label) {
+    void banner.offsetWidth;
+    banner.classList.add('flash');
+    if (!persistent) eventTimeout = setTimeout(() => { banner.hidden = true; }, 2900);
+  }
+}
+
+function render(snapshot) {
+  set('competition', snapshot.competition || '');
+  set('tag', demo ? 'Sample score' : snapshot.phase === 'live' ? 'Live' :
+    snapshot.phase === 'break' ? 'Innings break' : 'Final');
+  set('teams', snapshot.batting + ' vs ' + snapshot.fielding);
+  set('innings', 'Innings ' + snapshot.innings);
+  set('score', snapshot.runs + '/' + snapshot.wickets);
+  const crr = snapshot.legalBalls ? (snapshot.runs * 6 / snapshot.legalBalls).toFixed(2) : '0.00';
+  set('pace', overs(snapshot.legalBalls) + ' OV  ·  CRR ' + crr);
+  byId('balls').replaceChildren(...(snapshot.deliveries || []).slice(-12).map(value => {
+    const chip = document.createElement('span');
+    chip.className = 'ball' + (value === 'W' ? ' wicket' : ['4','6'].includes(value) ? ' boundary' : '');
+    chip.textContent = value;
+    return chip;
+  }));
+  for (let i = 0; i < 2; i++) {
+    const player = snapshot.batters?.[i];
+    line('batter' + (i + 1), player ? player.name + (player.onStrike ? ' *' : '') : '—',
+      player ? player.runs + ' (' + player.balls + ')' : '');
+  }
+  const bowler = snapshot.bowler;
+  line('bowler', bowler?.name || '—', bowler ? bowler.wickets + '/' + bowler.runs : '');
+  set('bowlerOvers', bowler ? overs(bowler.legalBalls) + ' overs' : '');
+  byId('bar').hidden = false;
+  showEvent(snapshot);
+  previous = snapshot;
+}
+
+const count = value => Number.isSafeInteger(value) && value >= 0;
+const label = value => typeof value === 'string' && value.trim().length > 0;
+
+function valid(snapshot) {
+  return snapshot && String(snapshot.clubId) === clubId && String(snapshot.fixtureId) === fixtureId &&
+    ['live','break','final'].includes(snapshot.phase) && label(snapshot.batting) && label(snapshot.fielding) &&
+    count(snapshot.innings) && snapshot.innings > 0 && count(snapshot.runs) && count(snapshot.wickets) &&
+    count(snapshot.legalBalls) && (!snapshot.deliveries || (Array.isArray(snapshot.deliveries) &&
+      snapshot.deliveries.every(value => label(value) && value.length <= 5))) &&
+    (!snapshot.batters || (Array.isArray(snapshot.batters) && snapshot.batters.every(player =>
+      player && label(player.name) && count(player.runs) && count(player.balls)))) &&
+    (!snapshot.bowler || (label(snapshot.bowler.name) && count(snapshot.bowler.runs) &&
+      count(snapshot.bowler.wickets) && count(snapshot.bowler.legalBalls)));
+}
+
+async function poll(feed) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 4500);
+  try {
+    const response = await fetch(feed, {cache:'no-store', credentials:'omit', signal:controller.signal});
+    if (!response.ok) throw new Error('Feed HTTP ' + response.status);
+    const snapshot = await response.json();
+    if (!valid(snapshot)) throw new Error('Invalid or mismatched snapshot');
+    const updated = Date.parse(snapshot.updatedAt);
+    if (!Number.isFinite(updated) || updated > Date.now() + 30000 ||
+        (snapshot.phase !== 'final' && updated < Date.now() - 120000) ||
+        (previous && updated < Date.parse(previous.updatedAt))) throw new Error('Invalid feed timestamp');
+    render(snapshot);
+    failures = 0;
+  } catch (error) {
+    failures++;
+    set('tag', previous ? 'Feed delayed · last score' : 'Score feed unavailable');
+    byId('event').hidden = true;
+    console.warn(error.message);
+  } finally {
+    clearTimeout(timeout);
+  }
+  setTimeout(() => poll(feed), Math.min(30000, 5000 * 2 ** failures));
+}
+
+if (demo && clubId === '1124300' && fixtureId === '1018') {
+  render({competition:'LPCL Indoor 2026 · Season 1', batting:'Rangers', fielding:'Ruthless XI',
+    phase:'live', innings:1, runs:67, wickets:0, legalBalls:17, deliveries:['6','6','4','6','6'],
+    batters:[{name:'Sathish Reddy',runs:47,balls:11},{name:'Praveen K',runs:20,balls:6}],
+    bowler:{name:'Chetan Reddy',wickets:0,runs:50,legalBalls:11}});
+} else if (demo) {
+  set('tag', 'Sample available for fixture 1018');
+} else if (params.has('feed') && /^\d+$/.test(clubId || '') && /^\d+$/.test(fixtureId || '')) {
+  try {
+    const feed = new URL(params.get('feed'), location.href);
+    if (feed.protocol !== 'https:' && !(feed.protocol === 'http:' &&
+        ['localhost','127.0.0.1'].includes(feed.hostname))) throw new Error('HTTPS feed required');
+    if (feed.username || feed.password) throw new Error('Feed URL must be public');
+    feed.searchParams.set('clubId', clubId);
+    feed.searchParams.set('fixtureId', fixtureId);
+    poll(feed);
+  } catch (error) {
+    set('tag', 'Invalid score feed URL');
+  }
+}
+</script>
+</html>
