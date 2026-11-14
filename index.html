@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>LevelUp Cricket Overlay Test</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: transparent !important;
+      font-family: Arial, sans-serif;
+    }
+
+    .scoreboard {
+      position: fixed;
+      bottom: 3%;
+      left: 3%;
+      width: 94%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #102c4a;
+      color: white;
+      border-bottom: 5px solid #18a8ed;
+      padding: 14px 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 18px #0006;
+    }
+
+    .team {
+      font-size: clamp(14px, 2vw, 30px);
+    }
+
+    .score {
+      font-size: clamp(24px, 3vw, 46px);
+      font-weight: bold;
+    }
+
+    .info {
+      font-size: clamp(12px, 1.4vw, 22px);
+    }
+
+    .test {
+      color: #ffce49;
+      font-size: clamp(11px, 1.2vw, 18px);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="scoreboard">
+    <div>
+      <div class="team">ROCKERS</div>
+      <div class="score">142/3</div>
+      <div class="info">OVERS 12.4</div>
+    </div>
+    <div>
+      <div class="info">LEVELUP PREMIER CRICKET LEAGUE</div>
+      <div class="test">SAMPLE DATA - OVERLAY TEST</div>
+    </div>
+    <div class="team">BRIGHTON TITANS</div>
+  </div>
+</body>
+
+</html>
