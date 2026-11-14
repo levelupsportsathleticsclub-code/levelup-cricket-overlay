@@ -3,7 +3,7 @@
 Use a 1920 × 1080 browser source with transparency. The IPL-style graphics are at
 `/levelup-cricket-overlay/ipl/`. The repository root forwards to this overlay and preserves query parameters. Without parameters, it displays the Rangers vs Ruthless XI sample without an on-screen sample label. Use the sample only for rehearsal. The center of the page is transparent for your camera feed.
 
-The logo is a separate OBS source. The upper-right is clear for a separate ad source. Add `?header=0` to hide the centered league banner. The team shields show initials by default. Ads and subscribe graphics are separate OBS sources.
+The logo is a separate OBS source. The upper-right is clear for a separate ad source. The centered league banner sits directly above the scorecard. Add `?header=0` to hide it. Add the optional standalone [scrolling ad marquee](https://levelupsportsathleticsclub-code.github.io/levelup-cricket-overlay/marquee/) as a separate full-canvas OBS Browser source above the scorecard source. The scorecard leaves room for it at the bottom. The team shields show initials by default. Ads and subscribe graphics are separate OBS sources.
 
 ## Rangers vs Ruthless XI preview
 

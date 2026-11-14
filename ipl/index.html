@@ -9,14 +9,14 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent
 body{font:800 clamp(10px,1.34vw,27px) "Arial Narrow","Liberation Sans Narrow",Arial,sans-serif;font-variant-numeric:tabular-nums}
 [hidden]{display:none!important}
 :root{--orange:#ff962f;--ink:#061438;--cyan:#4cdfff;--green:#90dd45}
-.masthead{position:absolute;inset:2.5% 3.3% auto;display:grid;grid-template-columns:1fr 3.4fr 1fr;align-items:start;gap:2vw;text-align:center;text-transform:uppercase}
-.ribbon{grid-column:2;position:relative;isolation:isolate;padding:.58em 1.4em;font-size:1.13em;font-style:italic;letter-spacing:.025em;line-height:1.08;filter:drop-shadow(0 0 .38em #1687fa80)}
+.masthead{display:flex;justify-content:center;text-align:center;text-transform:uppercase;margin:0 auto .62em;max-width:86%}
+.ribbon{position:relative;isolation:isolate;padding:.45em 1.8em;font-size:1.04em;font-style:italic;letter-spacing:.025em;line-height:1.08;filter:drop-shadow(0 0 .38em #1687fa80)}
 .ribbon::before,.ribbon::after{content:"";position:absolute;inset:0;z-index:-1;transform:skewX(-25deg)}
 .ribbon::before{background:linear-gradient(115deg,#ffd69f,#bc4c0b 9%,#ffb866 12%,#103b83 15%,#0a235f 80%,#ff790b 89%,#ffd69f);border-block:2px solid var(--orange)}
 .ribbon::after{inset:4px 7%;background:linear-gradient(180deg,#104393,#071a4e 58%,#0b1741);border-block:1px solid #53b4f9}
 #tag{position:absolute;left:50%;bottom:4.3%;transform:translateX(-50%);padding:.4em .7em;font-size:.72em;line-height:1.2;border:1px solid var(--orange);border-radius:.35em;background:#091d40;color:#fff1db;text-shadow:0 1px #000;white-space:nowrap}
-body:has(main:not([hidden])) #tag{bottom:calc(4.3% + 9em)}
-main{position:absolute;inset:auto 2.2% 4.3%}
+main #tag{bottom:calc(100% + .7em)}
+main{position:absolute;inset:auto 2.2% 6.5%}
 .wings{position:absolute;z-index:-1;inset:-2em -2.25% -4.5vh;overflow:hidden;pointer-events:none}
 .wings::before,.wings::after{content:"";position:absolute;width:30%;height:100%;background:linear-gradient(148deg,#0f9fffbb 0%,#102e77bb 30%,#123c1ecc 65%,#469d1acc 80%,#0b1c27);clip-path:polygon(0 0,100% 100%,0 100%)}
 .wings::after{right:0;transform:scaleX(-1);background:linear-gradient(148deg,#75db28cc,#2a771abb 38%,#124923cc 72%,#6fbb2bcc)}
@@ -52,13 +52,13 @@ main{position:absolute;inset:auto 2.2% 4.3%}
 @keyframes burst{from{transform:translateY(.6em) scale(.87);opacity:0}}
 @media(prefers-reduced-motion:reduce){#event.flash{animation:none}}
 </style>
-<header class="masthead" id="masthead">
-  <div id="competition" class="ribbon">LevelUp Premier Cricket League • Season 1</div>
-</header>
 <div id="tag" hidden></div>
 <main id="bar" hidden>
   <div class="wings" aria-hidden="true"></div>
   <div id="event" hidden></div>
+  <header class="masthead" id="masthead">
+    <div id="competition" class="ribbon">LevelUp Premier Cricket League • Season 1</div>
+  </header>
   <div class="matchup">
     <div class="team home"><span id="batting" class="name"></span></div>
     <div class="scorebox"><div id="score"></div></div>
@@ -160,7 +160,9 @@ function render(snapshot) {
   }
   const bowler = snapshot.bowler;
   line('bowler', bowler?.name || '—', bowler ? bowler.wickets + '/' + bowler.runs + ' (' + overs(bowler.legalBalls) + ')' : '');
-  byId('bar').hidden = false;
+  const bar = byId('bar');
+  bar.prepend(byId('tag'));
+  bar.hidden = false;
   showEvent(snapshot);
   previous = snapshot;
 }
