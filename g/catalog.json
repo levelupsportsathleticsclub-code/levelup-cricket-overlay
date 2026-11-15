@@ -1,0 +1,5 @@
+[
+  {"id":"logo","title":"LevelUp Logo","category":"Logo","type":"image","src":"assets/logo.png"},
+  {"id":"photo","title":"Photo Ad","category":"Ad","type":"image","src":"assets/photo-ad.jpg"},
+  {"id":"ad","title":"LVLUP Ad","category":"Ad","type":"video","src":"assets/lvlup-ad.mp4"}
+]

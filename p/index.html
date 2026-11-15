@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>LevelUp | Promo Shortcuts</title>
+<style>html,body{margin:0;background:transparent}</style>
+<script>
+'use strict';
+const aliases = new Map(Object.entries({
+  pb:'open-play-pickleball',ph:'pickleball-happy-hours',vb:'open-play-volleyball',
+  bd:'open-play-badminton',vt:'volleyball-training',bt:'badminton-training',
+  vc:'volleyball-clinics',ct:'indoor-cricket-tournament',bc:'box-cricket',ft:'indoor-futsal'
+}));
+const key = new URLSearchParams(location.search).keys().next().value;
+if (aliases.has(key)) location.replace('../promos/?sport=' + aliases.get(key));
+</script>
+</head><body></body></html>

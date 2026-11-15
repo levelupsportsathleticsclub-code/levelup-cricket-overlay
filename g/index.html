@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LevelUp | Broadcast Gallery</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0a1220;color:#f5f8ff;font:16px/1.5 system-ui,sans-serif}
+main{width:min(1100px,calc(100% - 40px));margin:56px auto}.eyebrow{color:#a8eb7f;text-transform:uppercase;letter-spacing:.2em;font-size:.75rem;font-weight:800}h1{font-size:clamp(2rem,6vw,4rem);letter-spacing:-.055em;margin:.1em 0}p{color:#b1c0d7;margin:.4em 0 1em}a{color:#b9eeff}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr));gap:16px;margin-top:22px}.card{border:1px solid #233653;border-radius:15px;background:#111e31;overflow:hidden}.card div.details{padding:16px}.preview{aspect-ratio:16/9;display:grid;place-items:center;background:repeating-conic-gradient(#0b1423 0% 25%,#121f31 0% 50%) 0 0/24px 24px;color:#b1c0d7}.preview img,.preview video{object-fit:contain;width:100%;height:100%;max-height:220px}.preview span{margin:10px;text-align:center}h2,h3{margin:0 0 8px}label{display:block;margin-top:18px;color:#c6d6ec}
+select,button{background:#192e49;color:#f5f8ff;border:1px solid #3c536f;border-radius:8px;padding:9px 11px;font:inherit}button{cursor:pointer}button:hover{background:#294a6d}input{width:100%;border:1px solid #3c536f;border-radius:8px;background:#0a1220;color:#f5f8ff;padding:8px;margin-bottom:12px}footer{margin-top:30px;color:#b1c0d7}a:focus-visible,select:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #a8eb7f;outline-offset:2px}
+</style>
+<script src="media.js" defer></script>
+<script src="gallery.js" defer></script>
+</head>
+<body><main>
+<div class="eyebrow">LevelUp Sports &amp; Athletics Club</div>
+<h1>Broadcast Gallery</h1>
+<p>Find a logo, photo, ad or clip. Copy its OBS URL into a Browser Source to show just that asset on a transparent background.</p>
+<a href="../p/?pb">Pickleball promo shortcut</a> · <a href="https://github.com/levelupsportsathleticsclub-code/levelup-cricket-overlay/tree/main/g">Upload &amp; catalog instructions</a>
+<label for="filter">Asset category</label>
+<select id="filter"><option value="">All assets</option></select>
+<div id="cards" class="grid"></div>
+<p id="status" role="status"></p>
+<footer>Video overlays loop muted. Media linked here is public. Keep stream keys and private files out of the repository.</footer>
+</main></body></html>
