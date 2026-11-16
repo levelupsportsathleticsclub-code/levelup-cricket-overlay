@@ -4,10 +4,11 @@
 <style>
 html,body{width:100%;height:100%;margin:0;overflow:hidden;background:transparent}
 :root{--left-edge:9.7%;--right-edge:90.65%;--bottom:7%;--height:14%}
-.wing{position:absolute;bottom:var(--bottom);height:var(--height);display:block;overflow:hidden}
+.wing{position:absolute;bottom:var(--bottom);height:var(--height);display:block;object-fit:contain}
+.left{object-position:right center}
+.right{object-position:left center}
 .left{left:0;width:var(--left-edge)}
 .right{left:var(--right-edge);right:0;width:calc(100% - var(--right-edge))}
-.defs{position:absolute;width:0;height:0}
 </style>
 <script>
 const p=new URLSearchParams(location.search);
@@ -16,37 +17,6 @@ for(const [key,property,min,max] of [['l','--left-edge',2,27],['r','--right-edge
   const n=Number(p.get(key));if(Number.isFinite(n)&&n>=min&&n<=max)document.documentElement.style.setProperty(property,n+'%');
 }
 </script></head><body>
-<svg class="defs" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
-<linearGradient id="gold" x1="0" y1="0" x2=".85" y2="1" gradientUnits="objectBoundingBox">
-<stop stop-color="#fff7d3"/><stop offset=".2" stop-color="#dab86e"/><stop offset=".43" stop-color="#826025"/><stop offset=".57" stop-color="#ffda83"/><stop offset=".8" stop-color="#b78530"/><stop offset="1" stop-color="#fff2bc"/>
-</linearGradient>
-<linearGradient id="blue" x2="0" y2="1"><stop stop-color="#0a1b46"/><stop offset=".43" stop-color="#2060d3"/><stop offset=".54" stop-color="#0b328c"/><stop offset="1" stop-color="#071225"/></linearGradient>
-<linearGradient id="silver" x2="1" y2="1"><stop stop-color="#fff"/><stop offset=".25" stop-color="#9baec5"/><stop offset=".55" stop-color="#fbfcff"/><stop offset="1" stop-color="#65778f"/></linearGradient>
-<radialGradient id="ball" cx=".32" cy=".24" r=".82"><stop stop-color="#ff989c"/><stop offset=".38" stop-color="#af243b"/><stop offset=".75" stop-color="#6c0f22"/><stop offset="1" stop-color="#310917"/></radialGradient>
-<g id="blade">
-<path d="M10 8 72 28 128 29 179 47 194 141 123 138 20 155 49 106 6 92 42 75Z" fill="#050b18" stroke="#060b15" stroke-width="6" opacity=".65"/>
-<path d="M7 4 77 25 128 27 177 43 193 137 120 133 16 152 48 101 5 88 43 74Z" fill="url(#blue)" stroke="url(#gold)" stroke-width="2.5"/>
-<path d="M17 13 75 31 123 33 166 49 109 47 58 64Z" fill="#2661b4" stroke="#85bfff" stroke-width="1.2"/>
-<path d="M9 7 76 32 111 76 64 59Z" fill="url(#gold)"/>
-<path d="M12 85 66 65 104 78 46 98Z" fill="url(#gold)"/>
-<path d="M26 145 88 111 158 110 130 127Z" fill="#1753ad" stroke="#74afff" stroke-width="1.4"/>
-<path d="M25 148 61 110 82 109 52 135Z" fill="url(#gold)"/>
-<path d="M18 16 66 58M32 139 63 110M105 37l56 13" stroke="#fff2bf" stroke-opacity=".7" stroke-width="1.4"/>
-</g>
-</defs></svg>
-<svg class="wing left" viewBox="0 0 200 160" preserveAspectRatio="none" role="img" aria-label="LPCL royal blue and gold shield">
-<use href="#blade"/>
-<path d="M80 48 97 48 111 36 126 41 142 36 155 48 173 48 169 92Q164 121 126 139 89 121 84 92Z" fill="#050f24" stroke="url(#gold)" stroke-width="5"/>
-<path d="M87 53 100 53 112 43 126 47 141 43 152 53 166 53 162 91Q158 113 126 131 94 113 91 91Z" fill="url(#blue)" stroke="url(#silver)" stroke-width="2.5"/>
-<path d="M100 102Q128 112 151 99 140 116 117 113Z" fill="url(#gold)"/>
-<text x="126" y="88" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="24" font-weight="900" font-style="italic" paint-order="stroke" stroke="#071329" stroke-width="2">LPCL</text>
-</svg>
-<svg class="wing right" viewBox="0 0 200 160" preserveAspectRatio="none" role="img" aria-label="Royal blue and gold wing with red cricket ball">
-<use href="#blade" transform="translate(200 0) scale(-1 1)"/>
-<g transform="translate(75 84) rotate(30)">
-<circle cy="3" r="32" fill="#091022" opacity=".7"/><circle r="31" fill="url(#ball)" stroke="#ffd6b0" stroke-width="1.1"/>
-<path d="M-9 -28Q-24 0 -8 29M-2 -30Q-17 0 -1 30" fill="none" stroke="#f9d9bf" stroke-width="1.25"/>
-<path d="M-6 -28Q-21 0 -5 29" fill="none" stroke="#fff1dc" stroke-width="2.2" stroke-dasharray="1.2 2.5"/>
-</g>
-</svg>
+<img class="wing left" src="royal-shield-left.png" alt="LPCL Royal Shield">
+<img class="wing right" src="royal-shield-right.png" alt="Royal Shield cricket ball">
 </body></html>
