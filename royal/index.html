@@ -9,6 +9,7 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden;background:transparent
 .right{object-position:left center}
 .left{left:0;width:var(--left-edge)}
 .right{left:var(--right-edge);right:0;width:calc(100% - var(--right-edge))}
+iframe.wrapped{position:absolute;inset:0;width:100%;height:100%;border:0;background:transparent;display:none}
 </style>
 <script>
 const p=new URLSearchParams(location.search);
@@ -16,7 +17,18 @@ for(const [key,property,min,max] of [['l','--left-edge',2,27],['r','--right-edge
   if(!p.has(key)||p.get(key).trim()==='')continue;
   const n=Number(p.get(key));if(Number.isFinite(n)&&n>=min&&n<=max)document.documentElement.style.setProperty(property,n+'%');
 }
+window.addEventListener('DOMContentLoaded',()=>{
+ if(p.get('v')==='season1'||p.get('v')==='wrapped'){
+  document.querySelectorAll('.wing').forEach(el=>el.style.display='none');
+  const frame=document.getElementById('wrapped');
+  const params=new URLSearchParams(p);
+  params.delete('v');
+  frame.src='./wrapped.html'+(params.toString()?'?'+params.toString():'');
+  frame.style.display='block';
+ }
+});
 </script></head><body>
 <img class="wing left" src="royal-shield-left.png" alt="LPCL Royal Shield">
 <img class="wing right" src="royal-shield-right.png" alt="Royal Shield cricket ball">
+<iframe id="wrapped" class="wrapped" title="Royal Shield complete frame with season badge" scrolling="no"></iframe>
 </body></html>
