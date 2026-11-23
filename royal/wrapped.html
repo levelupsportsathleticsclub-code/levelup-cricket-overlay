@@ -13,6 +13,9 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden;background:transparent
   --frame-left:9.6%;--frame-width:80.8%;
   --frame-bottom:7.9%;--frame-height:12.3%;
   --edge-thickness:4px;
+  /* SEASON-1 tab: right/bottom/width/height relative to OBS canvas */
+  --season-right:10.8%;--season-bottom:20.4%;
+  --season-width:10%;--season-height:3.7%;--season-font:1.45vw;
 }
 .frame{
  position:absolute;left:var(--frame-left);width:var(--frame-width);
@@ -39,6 +42,19 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden;background:transparent
 .wing{position:absolute;bottom:var(--bottom);height:var(--height);display:block;object-fit:contain;z-index:3;pointer-events:none}
 .left{left:0;width:var(--left-width);object-position:right center}
 .right{right:0;width:var(--right-width);object-position:left center}
+.season-tab{
+ position:absolute;right:var(--season-right);bottom:var(--season-bottom);
+ width:var(--season-width);height:var(--season-height);z-index:8;
+ display:flex;align-items:center;justify-content:center;
+ padding:0 .4vw;overflow:hidden;white-space:nowrap;pointer-events:none;
+ color:#fff6d7;font:900 var(--season-font)/1.1 Arial,Helvetica,sans-serif;
+ letter-spacing:.035em;text-shadow:0 1px 2px #061b3c;
+ background:linear-gradient(180deg,#193f7c 0%,#0a2351 50%,#061734 100%);
+ border:2px solid #e7b956;border-bottom:3px solid #b57923;
+ border-radius:13px 13px 5px 5px;
+ box-shadow:0 2px 5px #0008,inset 0 1px 1px #fff4;
+}
+.season-tab[hidden]{display:none}
 </style>
 <script>
 /* Example: ?v=frame2&x=9.6&w=80.8&y=7.9&fh=12.3
@@ -50,16 +66,26 @@ for(const [key,css,min,max] of [
  ['x','--frame-left',0,40],['w','--frame-width',35,100],
  ['y','--frame-bottom',0,40],['fh','--frame-height',4,30],
  ['b','--bottom',0,35],['h','--height',5,28],
- ['l','--left-width',5,30],['r','--right-width',5,30]
+ ['l','--left-width',5,30],['r','--right-width',5,30],
+ ['sx','--season-right',0,45],['sy','--season-bottom',0,45],
+ ['sw','--season-width',3,30],['sh','--season-height',1,14]
 ]){
  if(!q.has(key))continue;
  const v=Number(q.get(key));
  if(Number.isFinite(v)&&v>=min&&v<=max)document.documentElement.style.setProperty(css,v+'%');
 }
+const font=Number(q.get('sf'));if(q.has('sf')&&Number.isFinite(font)&&font>=0.4&&font<=4)document.documentElement.style.setProperty('--season-font',font+'vw');
+window.addEventListener('DOMContentLoaded',()=>{
+ const badge=document.getElementById('season-badge');
+ if(q.get('showseason')==='0')badge.hidden=true;
+ const value=q.get('season');
+ if(value!==null)badge.textContent=(value.trim().slice(0,36)||'SEASON-1');
+});
 </script>
 </head>
 <body>
 <div class="frame" aria-hidden="true"></div>
+<div id="season-badge" class="season-tab">SEASON-1</div>
 <img class="wing left" src="./royal-shield-left.png" alt="">
 <img class="wing right" src="./royal-shield-right.png" alt="">
 </body>
