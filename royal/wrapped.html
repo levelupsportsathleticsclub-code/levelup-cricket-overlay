@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LevelUp LPCL — Royal Shield Wrapped Ends</title>
+<style>
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:transparent}
+*{box-sizing:border-box}
+:root{
+  --left-width:12%; --right-width:12%;
+  --bottom:7%; --height:14%;
+  --inset-left:8.5%; --inset-right:8.5%;
+  --bridge-width:5.3%; --bridge-height:9.5%;
+  --gold:#d7a53e; --royal:#123b82; --navy:#092650;
+}
+.wing{position:absolute;display:block;bottom:var(--bottom);height:var(--height);object-fit:contain;z-index:3;pointer-events:none}
+.left{left:0;width:var(--left-width);object-position:right center}
+.right{right:0;width:var(--right-width);object-position:left center}
+/* These short collars extend into the scorebar's outer BLUE ends only.
+   The center CricClubs scorecard remains entirely transparent/unmodified. */
+.collar{position:absolute;bottom:calc(var(--bottom) + 0.9%);height:var(--bridge-height);width:var(--bridge-width);z-index:2;pointer-events:none;
+ background:linear-gradient(180deg,rgba(7,32,81,.96) 0%,rgba(16,64,137,.95) 43%,rgba(11,44,103,.94) 100%);
+ border-top:2px solid var(--gold);border-bottom:2px solid var(--gold);
+ box-shadow:0 2px 7px rgba(0,0,0,.33),inset 0 1px 0 rgba(255,255,255,.4)}
+.collar.left-collar{left:var(--inset-left);clip-path:polygon(0 7%,88% 0,100% 7%,100% 89%,82% 100%,0 94%)}
+.collar.right-collar{right:var(--inset-right);clip-path:polygon(0 7%,12% 0,100% 7%,100% 94%,18% 100%,0 89%)}
+.edge{position:absolute;bottom:calc(var(--bottom) + 0.6%);height:2px;z-index:1;pointer-events:none;
+ background:linear-gradient(90deg,transparent,rgba(251,213,121,.82),rgba(251,213,121,.9),transparent);
+ box-shadow:0 0 3px rgba(238,181,61,.42)}
+.edge.left-edge{left:9%;width:5%}
+.edge.right-edge{right:9%;width:5%}
+</style>
+<script>
+const q=new URLSearchParams(location.search);
+for(const [key,css,min,max] of [
+ ['l','--left-width',8,22],['r','--right-width',8,22],
+ ['b','--bottom',0,28],['h','--height',8,24],
+ ['gap','--bridge-width',2,10],['cl','--inset-left',5,20],['cr','--inset-right',5,20]
+]){
+ const v=Number(q.get(key));if(q.has(key)&&Number.isFinite(v)&&v>=min&&v<=max)document.documentElement.style.setProperty(css,v+'%');
+}
+</script>
+</head>
+<body>
+<div class="edge left-edge"></div><div class="edge right-edge"></div>
+<div class="collar left-collar"></div><div class="collar right-collar"></div>
+<img class="wing left" src="./royal-shield-left.png" alt="">
+<img class="wing right" src="./royal-shield-right.png" alt="">
+</body></html>
