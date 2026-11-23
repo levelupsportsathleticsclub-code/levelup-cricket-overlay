@@ -3,48 +3,64 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>LevelUp LPCL — Royal Shield Wrapped Ends</title>
+<title>LevelUp LPCL | Royal Shield Complete Frame</title>
 <style>
 html,body{width:100%;height:100%;margin:0;overflow:hidden;background:transparent}
 *{box-sizing:border-box}
 :root{
-  --left-width:12%; --right-width:12%;
-  --bottom:7%; --height:14%;
-  --inset-left:8.5%; --inset-right:8.5%;
-  --bridge-width:5.3%; --bridge-height:9.5%;
-  --gold:#d7a53e; --royal:#123b82; --navy:#092650;
+  /* Percentages are relative to the full 1920x1080 OBS Browser Source. */
+  --bottom:7%;--height:14%;--left-width:12%;--right-width:12%;
+  --frame-left:9.6%;--frame-width:80.8%;
+  --frame-bottom:7.9%;--frame-height:12.3%;
+  --edge-thickness:4px;
 }
-.wing{position:absolute;display:block;bottom:var(--bottom);height:var(--height);object-fit:contain;z-index:3;pointer-events:none}
+.frame{
+ position:absolute;left:var(--frame-left);width:var(--frame-width);
+ bottom:var(--frame-bottom);height:var(--frame-height);
+ z-index:2;pointer-events:none;background:transparent;
+ border-top:var(--edge-thickness) solid #ffda75;
+ border-bottom:var(--edge-thickness) solid #c88a26;
+ border-radius:12px;
+ box-shadow:0 -2px 0 #113e87 inset,0 2px 0 #08306d inset,
+ 0 -1px 0 rgba(7,23,55,.9),0 2px 5px rgba(0,0,0,.38);
+}
+/* Inset cobalt line adds the continuous royal-blue metallic finish.
+   The CricClubs scorebar and all its text remain transparent/visible. */
+.frame::before{
+ content:"";position:absolute;inset:2px 2px 2px 2px;
+ border-top:3px solid #123b82;border-bottom:3px solid #123b82;
+ border-radius:8px;pointer-events:none;
+}
+.frame::after{
+ content:"";position:absolute;left:1%;right:1%;top:-3px;height:2px;
+ background:linear-gradient(90deg,transparent,#fff0b5 16%,#c58b2c 30%,#fff3c0 50%,#c58b2c 70%,#fff0b5 84%,transparent);
+ pointer-events:none;
+}
+.wing{position:absolute;bottom:var(--bottom);height:var(--height);display:block;object-fit:contain;z-index:3;pointer-events:none}
 .left{left:0;width:var(--left-width);object-position:right center}
 .right{right:0;width:var(--right-width);object-position:left center}
-/* These short collars extend into the scorebar's outer BLUE ends only.
-   The center CricClubs scorecard remains entirely transparent/unmodified. */
-.collar{position:absolute;bottom:calc(var(--bottom) + 0.9%);height:var(--bridge-height);width:var(--bridge-width);z-index:2;pointer-events:none;
- background:linear-gradient(180deg,rgba(7,32,81,.96) 0%,rgba(16,64,137,.95) 43%,rgba(11,44,103,.94) 100%);
- border-top:2px solid var(--gold);border-bottom:2px solid var(--gold);
- box-shadow:0 2px 7px rgba(0,0,0,.33),inset 0 1px 0 rgba(255,255,255,.4)}
-.collar.left-collar{left:var(--inset-left);clip-path:polygon(0 7%,88% 0,100% 7%,100% 89%,82% 100%,0 94%)}
-.collar.right-collar{right:var(--inset-right);clip-path:polygon(0 7%,12% 0,100% 7%,100% 94%,18% 100%,0 89%)}
-.edge{position:absolute;bottom:calc(var(--bottom) + 0.6%);height:2px;z-index:1;pointer-events:none;
- background:linear-gradient(90deg,transparent,rgba(251,213,121,.82),rgba(251,213,121,.9),transparent);
- box-shadow:0 0 3px rgba(238,181,61,.42)}
-.edge.left-edge{left:9%;width:5%}
-.edge.right-edge{right:9%;width:5%}
 </style>
 <script>
+/* Example: ?v=frame2&x=9.6&w=80.8&y=7.9&fh=12.3
+   x = left frame edge; w = frame width; y = bottom; fh = height.
+   b/h adjust both original wings together; l/r adjust each wing width.
+*/
 const q=new URLSearchParams(location.search);
 for(const [key,css,min,max] of [
- ['l','--left-width',8,22],['r','--right-width',8,22],
- ['b','--bottom',0,28],['h','--height',8,24],
- ['gap','--bridge-width',2,10],['cl','--inset-left',5,20],['cr','--inset-right',5,20]
+ ['x','--frame-left',0,40],['w','--frame-width',35,100],
+ ['y','--frame-bottom',0,40],['fh','--frame-height',4,30],
+ ['b','--bottom',0,35],['h','--height',5,28],
+ ['l','--left-width',5,30],['r','--right-width',5,30]
 ]){
- const v=Number(q.get(key));if(q.has(key)&&Number.isFinite(v)&&v>=min&&v<=max)document.documentElement.style.setProperty(css,v+'%');
+ if(!q.has(key))continue;
+ const v=Number(q.get(key));
+ if(Number.isFinite(v)&&v>=min&&v<=max)document.documentElement.style.setProperty(css,v+'%');
 }
 </script>
 </head>
 <body>
-<div class="edge left-edge"></div><div class="edge right-edge"></div>
-<div class="collar left-collar"></div><div class="collar right-collar"></div>
+<div class="frame" aria-hidden="true"></div>
 <img class="wing left" src="./royal-shield-left.png" alt="">
 <img class="wing right" src="./royal-shield-right.png" alt="">
-</body></html>
+</body>
+</html>
